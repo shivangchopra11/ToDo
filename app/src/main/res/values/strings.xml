@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ToDo1</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_add_to_do">AddToDo</string>
+    <string-array name="category">
+        <item>Home</item>
+        <item>Work</item>
+        <item>Code</item>
+        <item>Travel</item>
+        <item>Personal</item>
+    </string-array>
+</resources>
