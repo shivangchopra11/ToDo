@@ -10,7 +10,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+    private ToDo todo;
+    private AppDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,10 +22,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        database = AppDatabase.getDatabase(getApplicationContext());
+        List<ToDo> todos = database.todoDao().getAllTodos();
         final ListFragment frag1 = new ListFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container,frag1).commit();
+        final EmptyListFragment frag2 = new EmptyListFragment();
 
+        if (todos.size()==0) {
+            getSupportFragmentManager().beginTransaction().add(R.id.container,frag2).commit();
+        }
+        else {
+            getSupportFragmentManager().beginTransaction().add(R.id.container,frag1).commit();
+        }
+
+
+//        getSupportFragmentManager().beginTransaction().add(R.id.container,frag1).commit();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

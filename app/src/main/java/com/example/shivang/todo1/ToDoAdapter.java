@@ -32,12 +32,32 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.MyViewHolder> 
         holder.tvDate.setText(item.getDate());
         holder.tvTime.setText(item.getTime());
         holder.tvCategory.setText(item.getCategory());
+        switch(item.getCategory()) {
+            case "H":
+                holder.tvCategory.setBackgroundResource(R.drawable.category_view_blue);
+                break;
+            case "W":
+                holder.tvCategory.setBackgroundResource(R.drawable.category_view_green);
+                break;
+            case "C":
+                holder.tvCategory.setBackgroundResource(R.drawable.category_view_orange);
+                break;
+            case "T":
+                holder.tvCategory.setBackgroundResource(R.drawable.category_view_purple);
+                break;
+            case "P":
+                holder.tvCategory.setBackgroundResource(R.drawable.category_view_red);
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
         return mTodo.size();
     }
+
+
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle,tvDate,tvTime,tvCategory;

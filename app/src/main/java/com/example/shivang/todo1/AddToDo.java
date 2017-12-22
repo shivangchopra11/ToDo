@@ -3,6 +3,7 @@ package com.example.shivang.todo1;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
@@ -40,11 +41,13 @@ public class AddToDo extends AppCompatActivity {
     String time;
     String category;
     Boolean setAlarm;
+    private AppDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_do);
+        database = AppDatabase.getDatabase(getApplicationContext());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         myCalendar = Calendar.getInstance();
@@ -126,13 +129,13 @@ public class AddToDo extends AppCompatActivity {
                     description = etDescription.getText().toString();
                 }
                 if(TextUtils.isEmpty(etDescription.getText())){
-                    date1 = "00/00/0000";
+                    date1 = "";
                 }
                 else {
                     date1 = etDate.getText().toString();
                 }
                 if(TextUtils.isEmpty(etDescription.getText())){
-                    time = "00:00";
+                    time = "";
                 }
                 else {
                     time = etTime.getText().toString();
@@ -145,28 +148,33 @@ public class AddToDo extends AppCompatActivity {
                     }
                 });
                 Spinner sc = findViewById(R.id.sCategory);
-                sc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        switch(position) {
-                            case 0: category = "Home";
-                                break;
-                            case 1: category = "Work";
-                                break;
-                            case 2: category = "Code";
-                                break;
-                            case 3: category = "Travel";
-                                break;
-                            case 4: category = "Personal";
-                                break;
-                        }
-                    }
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
+//                sc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        switch(position) {
+//                            case 0: category = "H";
+//                                break;
+//                            case 1: category = "W";
+//                                break;
+//                            case 2: category = "C";
+//                                break;
+//                            case 3: category = "T";
+//                                break;
+//                            case 4: category = "P";
+//                                break;
+//                        }
+//                    }
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//
+//                    }
+//                });
+                String text = sc.getSelectedItem().toString();
+                category = text.charAt(0) + "";
+                ToDo cur = new ToDo(title,description,category,date1,time,setAlarm);
+                database.todoDao().addTodo(cur);
+                Intent i = new Intent(AddToDo.this,MainActivity.class);
+                startActivity(i);
             }
         });
     }

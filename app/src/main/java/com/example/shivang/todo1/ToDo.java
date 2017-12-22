@@ -1,10 +1,14 @@
 package com.example.shivang.todo1;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by shivang on 22/12/17.
  */
-
+@Entity
 public class ToDo {
+    @PrimaryKey
     String title;
     String description;
     String category;
