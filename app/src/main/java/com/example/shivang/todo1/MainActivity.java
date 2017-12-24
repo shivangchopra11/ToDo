@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         database = AppDatabase.getDatabase(getApplicationContext());
-        List<ToDo> todos = database.todoDao().getAllTodos();
+        List<ToDo> todos = database.todoDao().getAllTodos(false);
         final ListFragment frag1 = new ListFragment();
         final EmptyListFragment frag2 = new EmptyListFragment();
 
@@ -63,8 +63,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.icDone) {
+            Intent i = new Intent(MainActivity.this,TasksDone.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

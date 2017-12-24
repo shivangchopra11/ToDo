@@ -39,7 +39,7 @@ public class ListFragment extends Fragment {
         database = AppDatabase.getDatabase(getContext().getApplicationContext());
 
 //        prepareSample();
-        toDoList = database.todoDao().getAllTodos();
+        toDoList = database.todoDao().getAllTodos(false);
         mAdapter = new ToDoAdapter(toDoList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -62,14 +62,23 @@ public class ListFragment extends Fragment {
                 toDoList.set(from,toExpense);
                 toDoList.set(to,fromExpense);
                 mAdapter.notifyItemMoved(from,to);
-
                 return true;
             }
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                database.todoDao().delete(toDoList.get(position));
+
+                String curTitle = toDoList.get(position).title;
+                String descr = toDoList.get(position).description;
+                String date1 = toDoList.get(position).date;
+                String time1 = toDoList.get(position).time;
+                String cate = toDoList.get(position).category;
+                Boolean seta = toDoList.get(position).setAlarm;
+                Boolean don = toDoList.get(position).done;
+                ToDo cur1 = new ToDo(curTitle,descr,cate,date1,time1,seta);
+                cur1.done = true;
+                database.todoDao().updateTodo(cur1);
                 toDoList.remove(position);
                 mAdapter.notifyItemRemoved(position);
                 if(toDoList.size()==0) {
@@ -88,18 +97,18 @@ public class ListFragment extends Fragment {
 
 
 
-    void prepareSample() {
-        database.todoDao().addTodo(new ToDo("Shivang", "hey","H","00/00/0000","00:00",false));
-        toDoList = database.todoDao().getAllTodos();
-        Log.v("TAG",toDoList.get(0).title);
-        database.todoDao().addTodo(new ToDo("Shivang Chopra", "hello","W","00/00/0000","00:00",true));
-        toDoList = database.todoDao().getAllTodos();
-        Log.v("TAG",toDoList.get(0).title);
-//        mAdapter.notifyDataSetChanged();
-        mAdapter = new ToDoAdapter(toDoList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-    }
+//    void prepareSample() {
+//        database.todoDao().addTodo(new ToDo("Shivang", "hey","H","00/00/0000","00:00",false));
+//        toDoList = database.todoDao().getAllTodos();
+//        Log.v("TAG",toDoList.get(0).title);
+//        database.todoDao().addTodo(new ToDo("Shivang Chopra", "hello","W","00/00/0000","00:00",true));
+//        toDoList = database.todoDao().getAllTodos();
+//        Log.v("TAG",toDoList.get(0).title);
+////        mAdapter.notifyDataSetChanged();
+//        mAdapter = new ToDoAdapter(toDoList);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+//        recyclerView.setLayoutManager(mLayoutManager);
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setAdapter(mAdapter);
+//    }
 }

@@ -18,9 +18,8 @@ public interface ToDoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addTodo(ToDo todo);
 
-    @Query("select * from todo")
-    public List<ToDo> getAllTodos();
-
+    @Query("select * from todo where done=:status")
+    public List<ToDo> getAllTodos(boolean status);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateTodo(ToDo todo);

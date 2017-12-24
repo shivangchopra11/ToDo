@@ -174,6 +174,7 @@ public class AddToDo extends AppCompatActivity {
                 ToDo cur = new ToDo(title,description,category,date1,time,setAlarm);
                 database.todoDao().addTodo(cur);
                 Intent i = new Intent(AddToDo.this,MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
             }
         });

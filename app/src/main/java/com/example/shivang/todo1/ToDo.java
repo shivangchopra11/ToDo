@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 /**
  * Created by shivang on 22/12/17.
  */
-@Entity
+@Entity(tableName = "todo")
 public class ToDo {
     @PrimaryKey
     String title;
@@ -15,6 +15,7 @@ public class ToDo {
     String date;
     String time;
     Boolean setAlarm;
+    Boolean done;
 
     public String getTitle() {
         return title;
@@ -64,13 +65,21 @@ public class ToDo {
         this.setAlarm = setAlarm;
     }
 
+    public Boolean getDone() {
+        return done;
+    }
+
+    public void setDone(Boolean done) {
+        this.done = done;
+    }
+
     public ToDo(String title, String description, String category, String date, String time, Boolean setAlarm) {
         this.title = title;
         this.description = description;
         this.category = category;
-
         this.date = date;
         this.time = time;
         this.setAlarm = setAlarm;
+        this.done = false;
     }
 }
