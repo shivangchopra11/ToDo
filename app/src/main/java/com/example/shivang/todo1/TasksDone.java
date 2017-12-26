@@ -1,5 +1,6 @@
 package com.example.shivang.todo1;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,6 +30,16 @@ public class TasksDone extends AppCompatActivity {
     List<ToDo> toDoList = new ArrayList<>();
     private AppDatabase database;
     private Paint p = new Paint();
+
+    @Override
+    public void onBackPressed() {
+//        this.finish();
+//        super.onBackPressed();
+        Intent nextScreen = new Intent(this, MainActivity.class);
+        nextScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(nextScreen);
+        ActivityCompat.finishAffinity(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

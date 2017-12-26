@@ -113,7 +113,7 @@ public class AddToDo extends AppCompatActivity {
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
                         myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                     }
-                }, hour, minute, true);//Yes 24 hour time
+                }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }

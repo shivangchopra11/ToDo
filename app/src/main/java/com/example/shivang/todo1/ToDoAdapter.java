@@ -120,14 +120,20 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.MyViewHolder> 
 //                        }
 //                    });
                     Button showDone = alertLayout.findViewById(R.id.showDone);
-                    final AlertDialog dialog = builder.create();
-                    showDone.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
+
+                    if(!((MainActivity) parent.getContext()).isFinishing())
+                    {
+                        //show dialog
+                        final AlertDialog dialog = builder.create();
+                        showDone.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.show();
+                    }
+
                 }
             });
         }
