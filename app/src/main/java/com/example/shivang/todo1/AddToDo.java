@@ -161,16 +161,6 @@ public class AddToDo extends AppCompatActivity {
                 ToDo cur = new ToDo(title,description,category,date1,time,setAlarm);
                 database.todoDao().addTodo(cur);
                 Calendar current = Calendar.getInstance();
-                if(myCalendar.get(Calendar.DAY_OF_MONTH)<current.get(Calendar.DAY_OF_MONTH)
-                        || myCalendar.get(Calendar.MONTH)<current.get(Calendar.MONTH)
-                        || myCalendar.get(Calendar.YEAR)<current.get(Calendar.YEAR)
-                        || myCalendar.get(Calendar.HOUR_OF_DAY)<current.get(Calendar.HOUR_OF_DAY)
-                        || myCalendar.get(Calendar.MINUTE)<current.get(Calendar.MINUTE)){
-                    //The set Date/Time already passed
-                    Toast.makeText(getApplicationContext(),
-                            "Invalid Date/Time",
-                            Toast.LENGTH_LONG).show();
-                }else {
                     setAlarm(myCalendar);
                     Log.d("TAG",myCalendar.get(Calendar.DAY_OF_MONTH)+"/"
                             +myCalendar.get(Calendar.MONTH)+"/"
@@ -180,7 +170,6 @@ public class AddToDo extends AppCompatActivity {
                     Intent i = new Intent(AddToDo.this, MainActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
-                }
             }
         });
     }
