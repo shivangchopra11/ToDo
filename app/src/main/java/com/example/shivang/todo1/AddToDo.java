@@ -1,6 +1,8 @@
 package com.example.shivang.todo1;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,6 +27,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -98,14 +102,16 @@ public class AddToDo extends AppCompatActivity {
         etTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+//                myCalendar = Calendar.getInstance();
+                int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
+                int minute = myCalendar.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(AddToDo.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         etTime.setText( selectedHour + ":" + selectedMinute);
+                        myCalendar.set(Calendar.MINUTE, selectedMinute);
+                        myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -150,34 +156,31 @@ public class AddToDo extends AppCompatActivity {
                     }
                 });
                 Spinner sc = findViewById(R.id.sCategory);
-//                sc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                    @Override
-//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                        switch(position) {
-//                            case 0: category = "H";
-//                                break;
-//                            case 1: category = "W";
-//                                break;
-//                            case 2: category = "C";
-//                                break;
-//                            case 3: category = "T";
-//                                break;
-//                            case 4: category = "P";
-//                                break;
-//                        }
-//                    }
-//                    @Override
-//                    public void onNothingSelected(AdapterView<?> parent) {
-//
-//                    }
-//                });
                 String text = sc.getSelectedItem().toString();
                 category = text.charAt(0) + "";
                 ToDo cur = new ToDo(title,description,category,date1,time,setAlarm);
                 database.todoDao().addTodo(cur);
-                Intent i = new Intent(AddToDo.this,MainActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
+                Calendar current = Calendar.getInstance();
+                if(myCalendar.get(Calendar.DAY_OF_MONTH)<current.get(Calendar.DAY_OF_MONTH)
+                        || myCalendar.get(Calendar.MONTH)<current.get(Calendar.MONTH)
+                        || myCalendar.get(Calendar.YEAR)<current.get(Calendar.YEAR)
+                        || myCalendar.get(Calendar.HOUR_OF_DAY)<current.get(Calendar.HOUR_OF_DAY)
+                        || myCalendar.get(Calendar.MINUTE)<current.get(Calendar.MINUTE)){
+                    //The set Date/Time already passed
+                    Toast.makeText(getApplicationContext(),
+                            "Invalid Date/Time",
+                            Toast.LENGTH_LONG).show();
+                }else {
+                    setAlarm(myCalendar);
+                    Log.d("TAG",myCalendar.get(Calendar.DAY_OF_MONTH)+"/"
+                            +myCalendar.get(Calendar.MONTH)+"/"
+                            +myCalendar.get(Calendar.YEAR)+" "
+                            +myCalendar.get(Calendar.HOUR_OF_DAY)+":"
+                            +myCalendar.get(Calendar.MINUTE)+"");
+                    Intent i = new Intent(AddToDo.this, MainActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+                }
             }
         });
     }
@@ -206,5 +209,23 @@ public class AddToDo extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private void setAlarm(Calendar targetCal){
+
+//        info.setText("\n\n***\n"
+//                + "Alarm is set@ " + targetCal.getTime() + "\n"
+//                + "***\n");
+
+
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("title",title);
+        intent.putExtra("desc",description);
+        intent.putExtra("time",targetCal.getTimeInMillis());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(getApplicationContext().ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), pendingIntent);
+//        sendBroadcast(intent,"setalarm");
     }
 }
